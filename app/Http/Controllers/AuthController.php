@@ -54,4 +54,15 @@ class AuthController extends Controller
 
         return redirect()->route('dashboard');
     }
+
+    /**
+     * Log the user out of the application.
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
 }

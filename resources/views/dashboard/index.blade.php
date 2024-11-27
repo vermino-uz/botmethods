@@ -25,7 +25,7 @@
         
         @if($bots->isEmpty())
             <a href="{{ route('bots.create') }}" class="btn btn-primary" style="background-color: #3390EC; border-color: #3390EC;">
-                <i class="bi bi-plus-lg me-2"></i>Create Your First Bot
+                <i class="bi bi-plus-lg me-2"></i>Add Your First Bot
             </a>
         @endif
     </div>

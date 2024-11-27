@@ -1,6 +1,109 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    :root {
+        --telegram-blue: #2AABEE;
+        --telegram-button-blue: #3390EC;
+        --telegram-hover-blue: #2b95d6;
+        --telegram-bg: #ffffff;
+        --telegram-secondary: #F5F5F5;
+        --telegram-text: #232323;
+    }
+
+    .card {
+        border: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        border-radius: 12px;
+    }
+
+    .card-header {
+        background-color: var(--telegram-bg);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        font-weight: 500;
+        color: var(--telegram-text);
+        border-radius: 12px 12px 0 0 !important;
+    }
+
+    .form-control {
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
+        padding: 0.625rem 1rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--telegram-blue);
+        box-shadow: 0 0 0 2px rgba(42, 171, 238, 0.1);
+    }
+
+    .form-control:read-only {
+        background-color: var(--telegram-secondary);
+    }
+
+    .input-group-text {
+        background-color: var(--telegram-secondary);
+        border: 1px solid #E5E7EB;
+    }
+
+    .btn-primary {
+        background-color: var(--telegram-button-blue);
+        border-color: var(--telegram-button-blue);
+        border-radius: 8px;
+        padding: 0.625rem 1.25rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--telegram-hover-blue);
+        border-color: var(--telegram-hover-blue);
+    }
+
+    .btn-outline-secondary {
+        border-color: #E5E7EB;
+        color: var(--telegram-text);
+        border-radius: 8px;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: var(--telegram-secondary);
+        border-color: #E5E7EB;
+        color: var(--telegram-text);
+    }
+
+    .btn-link {
+        color: var(--telegram-text);
+    }
+
+    .btn-link:hover {
+        color: var(--telegram-blue);
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: var(--telegram-text);
+        margin-bottom: 0.5rem;
+    }
+
+    #method-fields {
+        margin-bottom: 1.5rem;
+    }
+
+    .alert {
+        border-radius: 12px;
+        border: none;
+    }
+
+    .alert-success {
+        background-color: #E8F5E9;
+        color: #2E7D32;
+    }
+
+    .alert-danger {
+        background-color: #FFEBEE;
+        color: #C62828;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <!-- Main Content -->

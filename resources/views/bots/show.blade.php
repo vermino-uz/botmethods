@@ -198,6 +198,76 @@
                     </div>
                 `,
                 'get-updates': ''
+'send-photo': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="photo" class="form-label">Photo URL</label>
+        <input type="text" class="form-control" id="photo" name="photo" required>
+    </div>
+    <div class="mb-3">
+        <label for="caption" class="form-label">Caption (optional)</label>
+        <textarea class="form-control" id="caption" name="caption" rows="2"></textarea>
+    </div>
+`,
+'send-document': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="document" class="form-label">Document URL</label>
+        <input type="text" class="form-control" id="document" name="document" required>
+    </div>
+    <div class="mb-3">
+        <label for="caption" class="form-label">Caption (optional)</label>
+        <textarea class="form-control" id="caption" name="caption" rows="2"></textarea>
+    </div>
+`,
+'get-me': '',
+'get-chat': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+`,
+'leave-chat': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+`,
+'send-audio': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="audio" class="form-label">Audio URL</label>
+        <input type="text" class="form-control" id="audio" name="audio" required>
+    </div>
+    <div class="mb-3">
+        <label for="caption" class="form-label">Caption (optional)</label>
+        <textarea class="form-control" id="caption" name="caption" rows="2"></textarea>
+    </div>
+`,
+'send-video': `
+    <div class="mb-3">
+        <label for="chat_id" class="form-label">Chat ID</label>
+        <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+    </div>
+    <div class="mb-3">
+        <label for="video" class="form-label">Video URL</label>
+        <input type="text" class="form-control" id="video" name="video" required>
+    </div>
+    <div class="mb-3">
+        <label for="caption" class="form-label">Caption (optional)</label>
+        <textarea class="form-control" id="caption" name="caption" rows="2"></textarea>
+    </div>
+`
+
             };
 
             const apiMethodSelect = document.getElementById('api-method');

@@ -55,11 +55,14 @@
             padding: 1.5rem 0;
             overflow-y: auto;
             transition: all 0.3s ease;
-            transform: translateX(-100%);
+            z-index: 1040;
         }
 
-        .sidebar.show {
-            transform: translateX(0);
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            margin-top: var(--header-height);
+            transition: all 0.3s ease;
         }
 
         .sidebar .nav-link {
@@ -92,13 +95,6 @@
             color: #6b7280;
             padding: 0.75rem 1.5rem;
             margin-bottom: 0.5rem;
-        }
-
-        /* Main Content Area */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
-            margin-top: var(--header-height);
         }
 
         /* Card Styles */
@@ -181,15 +177,7 @@
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .sidebar {
-                position: fixed;
-                top: var(--header-height);
-                left: 0;
-                bottom: 0;
-                width: 280px;
-                z-index: 1045;
-                background: #ffffff;
                 transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
             }
 
             .sidebar.show {
@@ -219,11 +207,7 @@
                 right: 0;
                 bottom: 0;
                 background: rgba(0, 0, 0, 0.5);
-                z-index: 1040;
-            }
-
-            .sidebar-open .sidebar {
-                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 1035;
             }
         }
     </style>

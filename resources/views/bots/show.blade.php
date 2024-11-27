@@ -288,38 +288,22 @@
                 }
             });
         });
-
         function submitApiRequest() {
             const form = document.getElementById('api-method-form');
             const formData = new FormData(form);
             const method = formData.get('api-method');
-            let url = '';
-            let options = {};
+            const botToken = '{{ $bot->token }}';
+            let url = `https://api.telegram.org/bot${botToken}/${method}?`;
 
-            if (method === 'sendmessage') {
-                url = `{{ route('bots.send-message', $bot) }}`;
-                options = {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        chat_id: formData.get('chat_id'),
-                        message: formData.get('message')
-                    })
-                };
-            } else if (method === 'getme') {
-                url = `{{ route('bots.updates', $bot) }}`;
-                options = {
-                    method: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    }
-                };
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'api-method' && value) {
+                    url += `${key}=${encodeURIComponent(value)}&`;
+                }
             }
 
-            fetch(url, options)
+            url = url.slice(0, -1); // Remove trailing '&'
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('apiResponseContent').textContent = JSON.stringify(data, null, 2);

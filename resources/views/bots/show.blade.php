@@ -357,23 +357,11 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const pre = document.getElementById('apiResponseContent');
-                    pre.innerHTML = '';
-                    const code = document.createElement('code');
-                    code.className = 'language-json';
-                    code.textContent = JSON.stringify(data, null, 2);
-                    pre.appendChild(code);
-                    Prism.highlightElement(code);
+                    document.getElementById('apiResponseContent').textContent = JSON.stringify(data, null, 2);
                     new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
                 })
                 .catch(error => {
-                    const pre = document.getElementById('apiResponseContent');
-                    pre.innerHTML = '';
-                    const code = document.createElement('code');
-                    code.className = 'language-json';
-                    code.textContent = JSON.stringify({ error: error.message }, null, 2);
-                    pre.appendChild(code);
-                    Prism.highlightElement(code);
+                    document.getElementById('apiResponseContent').textContent = 'Error: ' + error;
                     new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
                 });
         }

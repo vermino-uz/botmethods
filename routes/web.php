@@ -20,10 +20,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
-    // Bot management routes
-    Route::resource('bots', BotController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
-    
-    // Bot API routes
+    // Bot routes
+    Route::resource('bots', BotController::class);
     Route::post('/bots/{bot}/send-message', [BotController::class, 'sendMessage'])->name('bots.send-message');
     Route::get('/bots/{bot}/updates', [BotController::class, 'getUpdates'])->name('bots.updates');
 });

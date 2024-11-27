@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Bot extends Model
 {
-    protected $table = 'bots';
-    protected $fillable = ['user_id', 'name', 'token'];
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'token',
+        'user_id',
+    ];
 
     /**
      * Get the user that owns the bot.
      */
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class);
     }

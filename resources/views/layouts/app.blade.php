@@ -55,6 +55,11 @@
             padding: 1.5rem 0;
             overflow-y: auto;
             transition: all 0.3s ease;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+            transform: translateX(0);
         }
 
         .sidebar .nav-link {
@@ -176,15 +181,49 @@
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .sidebar {
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                bottom: 0;
+                width: 280px;
+                z-index: 1045;
+                background: #ffffff;
                 transform: translateX(-100%);
-            }
-
-            .main-content {
-                margin-left: 0;
+                transition: transform 0.3s ease-in-out;
             }
 
             .sidebar.show {
                 transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .navbar-brand {
+                margin-left: 0.5rem;
+            }
+
+            #sidebarToggle {
+                padding: 0.25rem 0.75rem;
+                font-size: 1.25rem;
+                margin-right: 0.5rem;
+            }
+
+            .sidebar-open::after {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+            }
+
+            .sidebar-open .sidebar {
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             }
         }
     </style>
@@ -193,14 +232,16 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-md navbar-light fixed-top">
         <div class="container-fluid px-4">
+            <button class="navbar-toggler border-0 d-md-none" type="button" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
             <a class="navbar-brand" href="{{ url('/') }}">
                 <i class="bi bi-robot me-2"></i>
                 {{ config('app.name', 'BotMethods') }}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
+                <i class="bi bi-three-dots-vertical"></i>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav me-auto">
@@ -280,8 +321,34 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Copy to Clipboard Function -->
+    <!-- Custom Scripts -->
     <script>
+        // Sidebar Toggle for Mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                    document.body.classList.toggle('sidebar-open');
+                });
+
+                // Close sidebar when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (window.innerWidth < 768 && 
+                        !sidebar.contains(event.target) && 
+                        !sidebarToggle.contains(event.target) && 
+                        sidebar.classList.contains('show')) {
+                        sidebar.classList.remove('show');
+                        document.body.classList.remove('sidebar-open');
+                    }
+                });
+            }
+        });
+
+        // Copy to Clipboard Function
         function copyToClipboard(button) {
             const textToCopy = button.getAttribute('data-copy-text');
             navigator.clipboard.writeText(textToCopy).then(() => {

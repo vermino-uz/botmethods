@@ -262,27 +262,28 @@
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
 
-            // Populate dropdown
-            for (const method in apiMethods) {
-                const option = document.createElement('option');
-                option.value = method;
-                option.textContent = method.replace(/([a-z])([A-Z])/g, '$1 $2'); // Converts camelCase to spaced words
-                apiMethodSelect.appendChild(option);
-            }
-
             methodSearchInput.addEventListener('input', function() {
                 const searchTerm = methodSearchInput.value.toLowerCase();
-                const options = apiMethodSelect.options;
+                let matchFound = false;
 
-                for (let i = 0; i < options.length; i++) {
-                    const option = options[i];
+                for (let i = 0; i < apiMethodSelect.options.length; i++) {
+                    const option = apiMethodSelect.options[i];
                     const text = option.textContent.toLowerCase();
 
                     if (text.includes(searchTerm)) {
                         option.style.display = '';
+                        if (!matchFound) {
+                            apiMethodSelect.selectedIndex = i;
+                            matchFound = true;
+                        }
                     } else {
                         option.style.display = 'none';
                     }
+                }
+
+                // Trigger change event to update fields
+                if (matchFound) {
+                    apiMethodSelect.dispatchEvent(new Event('change'));
                 }
             });
 

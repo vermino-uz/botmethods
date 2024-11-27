@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller; // Add this line
 use App\Models\Bot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

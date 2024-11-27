@@ -48,16 +48,27 @@
             padding-top: .75rem;
             padding-bottom: .75rem;
         }
+
+        .main-content {
+            margin-left: 16.66667%;
+            padding: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                margin-left: 0;
+            }
+        }
     </style>
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-light">
+    <div class="min-h-screen bg-gray-100">
         <!-- Navigation -->
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm fixed-top">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -104,13 +115,41 @@
             </div>
         </nav>
 
+        @auth
+            <!-- Sidebar -->
+            <div class="col-md-2 d-md-block bg-light sidebar">
+                <div class="position-sticky pt-3">
+                    <div class="d-flex justify-content-between align-items-center px-3 mb-3">
+                        <h6 class="sidebar-heading text-muted">YOUR BOTS</h6>
+                        <a href="{{ route('bots.create') }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-plus-lg"></i> New Bot
+                        </a>
+                    </div>
+                    <ul class="nav flex-column">
+                        @forelse(Auth::user()->bots as $bot)
+                            <li class="nav-item">
+                                <a href="{{ route('bots.show', $bot) }}" 
+                                   class="nav-link {{ request()->is('bots/'.$bot->id) ? 'active' : '' }}">
+                                    <i class="bi bi-robot"></i>
+                                    {{ $bot->name }}
+                                </a>
+                            </li>
+                        @empty
+                            <li class="nav-item">
+                                <span class="nav-link text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    No bots yet
+                                </span>
+                            </li>
+                        @endforelse
+                    </ul>
+                </div>
+            </div>
+        @endauth
+
         <!-- Page Content -->
-        <main>
-            @hasSection('content')
-                @yield('content')
-            @else
-                {{ $slot ?? '' }}
-            @endif
+        <main class="main-content">
+            @yield('content')
         </main>
     </div>
 

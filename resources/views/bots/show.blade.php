@@ -78,8 +78,9 @@
                         <div id="method-fields">
                             <!-- Fields will be dynamically inserted here -->
                         </div>
-
-                        <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
+                        <button type="button" class="btn btn-primary" onclick="submitApiRequest()">
+                            <i class="bi bi-send"></i> Send request
+                        </button>
                     </form>
                 </div>
             </div>

@@ -45,7 +45,7 @@
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-telegram">Create Bot</button>
+                            <button type="submit" class="btn btn-primary" style="background-color: #2AABEE; border-color: #2AABEE;">Create Bot</button>
                         </div>
                     </form>
                 </div>

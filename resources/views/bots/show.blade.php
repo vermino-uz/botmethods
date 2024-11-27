@@ -54,6 +54,10 @@
                 <div class="card-body">
                     <form id="api-method-form">
                         <div class="mb-3">
+                            <label for="method-search" class="form-label">Search Methods</label>
+                            <input type="text" class="form-control" id="method-search" placeholder="Search for a method...">
+                        </div>
+                        <div class="mb-3">
                             <label for="api-method" class="form-label">Select Method</label>
                             <select class="form-select" id="api-method" name="api-method">
                             </select>
@@ -254,6 +258,7 @@
 
 
         document.addEventListener('DOMContentLoaded', function() {
+            const methodSearchInput = document.getElementById('method-search');
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
 
@@ -264,6 +269,22 @@
                 option.textContent = method.replace(/([a-z])([A-Z])/g, '$1 $2'); // Converts camelCase to spaced words
                 apiMethodSelect.appendChild(option);
             }
+
+            methodSearchInput.addEventListener('input', function() {
+                const searchTerm = methodSearchInput.value.toLowerCase();
+                const options = apiMethodSelect.options;
+
+                for (let i = 0; i < options.length; i++) {
+                    const option = options[i];
+                    const text = option.textContent.toLowerCase();
+
+                    if (text.includes(searchTerm)) {
+                        option.style.display = '';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                }
+            });
 
             // Update form fields on method change
             apiMethodSelect.addEventListener('change', function() {

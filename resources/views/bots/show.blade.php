@@ -38,6 +38,17 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text">@</span>
+                            <input type="text" class="form-control" value="{{ $bot->username }}" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->username }}">
+                                Copy
+                            </button>
+                        </div>
+                    </div>
                     
                     <div class="mb-3">
                         <label class="form-label">Created At</label>

@@ -44,6 +44,7 @@
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Token</th>
+                                    <th>Username</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -53,8 +54,14 @@
                                         <td>{{ $bot->id }}</td>
                                         <td>{{ $bot->name ?: 'Unnamed Bot' }}</td>
                                         <td>
-                                            <code class="small">{{ Str::limit($bot->token, 20) }}</code>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control form-control-sm" value="{{ $bot->token }}" readonly>
+                                                <button class="btn btn-sm btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->token }}">
+                                                    Copy
+                                                </button>
+                                            </div>
                                         </td>
+                                        <td>@{{ $bot->username }}</td>
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('bots.show', $bot) }}" 

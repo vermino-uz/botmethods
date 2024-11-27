@@ -274,7 +274,7 @@
             <!-- Sidebar -->
             <div class="sidebar">
                 <div class="px-3 mb-3">
-                    <a href="{{ route('bots.create') }}" class="btn btn-primary w-100" style="background-color: #3390EC; border-color: #87CEFA; color: #fff;">
+                    <a href="{{ route('bots.create') }}" class="btn btn-primary w-100" style="background-color: #3390EC; color: #fff;">
                         <i class="bi bi-plus-lg me-2"></i>New Bot
                     </a>
                 </div>

@@ -262,6 +262,14 @@
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
 
+            // Populate dropdown initially
+            for (const method in apiMethods) {
+                const option = document.createElement('option');
+                option.value = method;
+                option.textContent = method.replace(/([a-z])([A-Z])/g, '$1 $2'); // Converts camelCase to spaced words
+                apiMethodSelect.appendChild(option);
+            }
+
             methodSearchInput.addEventListener('input', function() {
                 const searchTerm = methodSearchInput.value.toLowerCase();
                 let matchFound = false;

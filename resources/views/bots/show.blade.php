@@ -63,25 +63,23 @@
                     API Methods
                 </div>
                 <div class="card-body">
-                    <form id="api-method-form" onsubmit="return submitApiRequest()">
+                    <form id="api-method-form">
+                        <div class="mb-3">
+                            <label for="method-search" class="form-label">Search Methods</label>
+                            <input type="text" class="form-control" id="method-search" placeholder="Search for a method...">
+                        </div>
                         <div class="mb-3">
                             <label for="api-method" class="form-label">Select Method</label>
-                            <div class="input-group">
-                                <input type="text" id="method-search" class="form-control" placeholder="Search methods...">
-                                <select id="api-method" name="api-method" class="form-select" required>
-                                    <option value="">Select a method</option>
-                                </select>
-                            </div>
+                            <select class="form-select" id="api-method" name="api-method">
+                            </select>
                         </div>
 
-                        <div id="method-fields" class="mb-3">
-                            <!-- Method parameters will be dynamically added here -->
+                        <!-- Dynamic Fields -->
+                        <div id="method-fields">
+                            <!-- Fields will be dynamically inserted here -->
                         </div>
 
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-send"></i>
-                            Send Request
-                        </button>
+                        <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
                     </form>
                 </div>
             </div>
@@ -89,27 +87,18 @@
     </div>
 
     <!-- API Response Modal -->
-    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="responseModalLabel">API Response</h5>
-                    <div class="ms-auto me-2">
-                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllNodes()">
-                            <i class="bi bi-arrows-expand"></i>
-                            Toggle All
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="copyResponse()">
-                            <i class="bi bi-clipboard"></i>
-                            Copy
-                        </button>
-                    </div>
+                    <h5 class="modal-title" id="apiResponseModalLabel">API Response</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="json-container bg-light p-3 rounded">
-                        <pre><code class="language-json" id="responseContent"></code></pre>
-                    </div>
+                    <pre id="apiResponseContent"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -122,268 +111,259 @@
     </form>
 
     <script>
+        const apiMethods = {
+    getUpdates: [
+        { offset: 'int' },
+        { limit: 'int' },
+        { timeout: 'int' },
+        { allowed_updates: 'array' }
+    ],
+    getWebhookInfo: [
+    ],
+    setWebhook: [
+        { url: 'url' }
+    ],
+    deleteWebhook: [
+        { drop_pending_updates: 'boolean' }
+    ],
+    getMe: [
+    ],
+    sendMessage: [
+        { chat_id: 'int' },
+        { text: 'string' },
+        { parse_mode: 'string' },
+        { reply_to_message_id: 'int' }
+    ],
+    forwardMessage: [
+        { chat_id: 'int' },
+        { from_chat_id: 'int' },
+        { message_id: 'int' }
+    ],
+    sendPhoto: [
+        { chat_id: 'int' },
+        { photo: 'url' },
+        { caption: 'string' },
+        { parse_mode: 'string' }
+    ],
+    sendAudio: [
+        { chat_id: 'int' },
+        { audio: 'url' },
+        { caption: 'string' },
+        { duration: 'int' }
+    ],
+    sendDocument: [
+        { chat_id: 'int' },
+        { document: 'url' },
+        { caption: 'string' }
+    ],
+    sendVideo: [
+        { chat_id: 'int' },
+        { video: 'url' },
+        { caption: 'string' },
+        { supports_streaming: 'boolean' }
+    ],
+    sendAnimation: [
+        { chat_id: 'int' },
+        { animation: 'url' },
+        { caption: 'string' }
+    ],
+    sendVoice: [
+        { chat_id: 'int' },
+        { voice: 'url' },
+        { caption: 'string' },
+        { duration: 'int' }
+    ],
+    sendLocation: [
+        { chat_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' }
+    ],
+    editMessageLiveLocation: [
+        { chat_id: 'int' },
+        { message_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' }
+    ],
+    stopMessageLiveLocation: [
+        { chat_id: 'int' },
+        { message_id: 'int' }
+    ],
+    sendVenue: [
+        { chat_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' },
+        { title: 'string' },
+        { address: 'string' }
+    ],
+    sendContact: [
+        { chat_id: 'int' },
+        { phone_number: 'string' },
+        { first_name: 'string' }
+    ],
+    sendPoll: [
+        { chat_id: 'int' },
+        { question: 'string' },
+        { options: 'array' },
+        { is_anonymous: 'boolean' }
+    ],
+    sendDice: [
+        { chat_id: 'int' }
+    ],
+    getUserProfilePhotos: [
+        { user_id: 'int' },
+        { offset: 'int' },
+        { limit: 'int' }
+    ],
+    getFile: [
+        { file_id: 'string' }
+    ],
+    kickChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    unbanChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    restrictChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' },
+        { permissions: 'object' }
+    ],
+    promoteChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' },
+        { can_change_info: 'boolean' }
+    ],
+    setChatPermissions: [
+        { chat_id: 'int' },
+        { permissions: 'object' }
+    ],
+    getChat: [
+        { chat_id: 'int' }
+    ],
+    getChatAdministrators: [
+        { chat_id: 'int' }
+    ],
+    getChatMemberCount: [
+        { chat_id: 'int' }
+    ],
+    getChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    answerCallbackQuery: [
+        { callback_query_id: 'string' },
+        { text: 'string' },
+        { show_alert: 'boolean' }
+    ],
+    editMessageText: [
+        { chat_id: 'int' },
+        { message_id: 'int' },
+        { text: 'string' },
+        { parse_mode: 'string' }
+    ],
+    deleteMessage: [
+        { chat_id: 'int' },
+        { message_id: 'int' }
+    ]
+};
+
+
         document.addEventListener('DOMContentLoaded', function() {
-            hljs.highlightAll();
-            
             const methodSearchInput = document.getElementById('method-search');
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
 
-            // List of Telegram Bot API methods with their parameters
-            const apiMethods = {
-                getMe: {},
-                getUpdates: {
-                    offset: { type: 'number', description: 'Identifier of the first update to be returned' },
-                    limit: { type: 'number', description: 'Limits the number of updates to be retrieved' },
-                    timeout: { type: 'number', description: 'Timeout in seconds for long polling' },
-                    allowed_updates: { type: 'string', description: 'List of update types to receive' }
-                },
-                sendMessage: {
-                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' },
-                    text: { type: 'string', required: true, description: 'Text of the message to be sent' },
-                    parse_mode: { type: 'string', description: 'Mode for parsing entities in the message text' },
-                    disable_notification: { type: 'boolean', description: 'Sends the message silently' }
-                },
-                sendPhoto: {
-                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' },
-                    photo: { type: 'string', required: true, description: 'Photo to send (file_id or URL)' },
-                    caption: { type: 'string', description: 'Photo caption' },
-                    parse_mode: { type: 'string', description: 'Mode for parsing entities in the caption' }
-                },
-                getChat: {
-                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' }
-                }
-            };
-
-            // Populate method select on page load
-            function populateSelect(methods) {
-                apiMethodSelect.innerHTML = '<option value="">Select a method</option>';
-                Object.keys(methods).sort().forEach(method => {
-                    const option = document.createElement('option');
-                    option.value = method;
-                    option.textContent = method;
-                    apiMethodSelect.appendChild(option);
-                });
+            // Populate dropdown initially
+            for (const method in apiMethods) {
+                const option = document.createElement('option');
+                option.value = method;
+                option.textContent = method.replace(/([a-z])([A-Z])/g, '$1 $2'); // Converts camelCase to spaced words
+                apiMethodSelect.appendChild(option);
             }
 
-            // Initial population
-            populateSelect(apiMethods);
-
-            // Search functionality
             methodSearchInput.addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const filteredMethods = Object.keys(apiMethods)
-                    .filter(method => method.toLowerCase().includes(searchTerm))
-                    .reduce((obj, key) => {
-                        obj[key] = apiMethods[key];
-                        return obj;
-                    }, {});
-                populateSelect(filteredMethods);
+                const searchTerm = methodSearchInput.value.toLowerCase();
+                let matchFound = false;
+
+                for (let i = 0; i < apiMethodSelect.options.length; i++) {
+                    const option = apiMethodSelect.options[i];
+                    const text = option.textContent.toLowerCase();
+
+                    if (text.includes(searchTerm)) {
+                        option.style.display = '';
+                        if (!matchFound) {
+                            apiMethodSelect.selectedIndex = i;
+                            matchFound = true;
+                        }
+                    } else {
+                        option.style.display = 'none';
+                    }
+                }
+
+                // Trigger change event to update fields
+                if (matchFound) {
+                    apiMethodSelect.dispatchEvent(new Event('change'));
+                }
             });
 
-            // Generate parameter fields when method is selected
+            // Update form fields on method change
             apiMethodSelect.addEventListener('change', function() {
-                const selectedMethod = this.value;
+                const selectedMethod = apiMethodSelect.value;
                 methodFieldsContainer.innerHTML = '';
 
-                if (selectedMethod && apiMethods[selectedMethod]) {
-                    const parameters = apiMethods[selectedMethod];
-                    Object.entries(parameters).forEach(([param, details]) => {
-                        const div = document.createElement('div');
-                        div.className = 'mb-3';
-                        
+                if (apiMethods[selectedMethod]) {
+                    apiMethods[selectedMethod].forEach(field => {
+                        const fieldName = Object.keys(field)[0];
+                        const fieldType = field[fieldName];
+                        const formGroup = document.createElement('div');
+                        formGroup.className = 'mb-3';
+
                         const label = document.createElement('label');
                         label.className = 'form-label';
-                        label.htmlFor = param;
-                        label.textContent = `${param}${details.required ? ' *' : ''}`;
-                        
+                        label.setAttribute('for', fieldName);
+                        label.textContent = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+
                         const input = document.createElement('input');
-                        input.type = details.type === 'boolean' ? 'checkbox' : 'text';
-                        input.className = details.type === 'boolean' ? 'form-check-input' : 'form-control';
-                        input.id = param;
-                        input.name = param;
-                        if (details.required) input.required = true;
-                        
-                        const small = document.createElement('small');
-                        small.className = 'form-text text-muted';
-                        small.textContent = details.description;
-                        
-                        div.appendChild(label);
-                        div.appendChild(input);
-                        div.appendChild(small);
-                        methodFieldsContainer.appendChild(div);
+                        input.className = 'form-control';
+                        input.id = fieldName;
+                        input.name = fieldName;
+                        input.type = fieldType === 'int' ? 'number' : 'text';
+                        input.required = true;
+
+                        formGroup.appendChild(label);
+                        formGroup.appendChild(input);
+                        methodFieldsContainer.appendChild(formGroup);
                     });
                 }
             });
+        });
+        function submitApiRequest() {
+            const form = document.getElementById('api-method-form');
+            const formData = new FormData(form);
+            const method = formData.get('api-method');
+            const botToken = '{{ $bot->token }}';
+            let url = `https://api.telegram.org/bot${botToken}/${method}?`;
 
-            function submitApiRequest() {
-                const form = document.getElementById('api-method-form');
-                const formData = new FormData(form);
-                const method = formData.get('api-method');
-                const botToken = '{{ $bot->token }}';
-                let url = `https://api.telegram.org/bot${botToken}/${method}?`;
-
-                // Convert FormData to URL parameters
-                const params = {};
-                for (let [key, value] of formData.entries()) {
-                    if (key !== 'api-method' && value) {
-                        params[key] = value;
-                    }
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'api-method' && value) {
+                    url += `${key}=${encodeURIComponent(value)}&`;
                 }
+            }
 
-                // Make the API request
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(params)
-                })
+            url = url.slice(0, -1); // Remove trailing '&'
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    const responseContent = document.getElementById('responseContent');
-                    responseContent.textContent = JSON.stringify(data, null, 2);
-                    hljs.highlightElement(responseContent);
-                    
-                    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
-                    responseModal.show();
+                    document.getElementById('apiResponseContent').textContent = JSON.stringify(data, null, 2);
+                    new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
                 })
                 .catch(error => {
-                    const responseContent = document.getElementById('responseContent');
-                    responseContent.textContent = JSON.stringify({ error: error.message }, null, 2);
-                    hljs.highlightElement(responseContent);
-                    
-                    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
-                    responseModal.show();
+                    document.getElementById('apiResponseContent').textContent = 'Error: ' + error;
+                    new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
                 });
-
-                return false; // Prevent form submission
-            }
-
-            let jsonResponse = null;
-
-            function makeCollapsible(json) {
-                if (typeof json !== 'object' || json === null) return json;
-                
-                const collapse = (element) => {
-                    const toggleBtn = element.previousElementSibling;
-                    if (toggleBtn && toggleBtn.classList.contains('json-toggle')) {
-                        toggleBtn.classList.toggle('collapsed');
-                        element.style.display = element.style.display === 'none' ? 'block' : 'none';
-                    }
-                };
-
-                const processElement = (element) => {
-                    if (element.nodeType === Node.ELEMENT_NODE) {
-                        if (element.tagName === 'SPAN' && element.classList.contains('hljs-string')) {
-                            try {
-                                const content = element.textContent;
-                                const parsed = JSON.parse(content);
-                                if (typeof parsed === 'object' && parsed !== null) {
-                                    const toggle = document.createElement('span');
-                                    toggle.className = 'json-toggle';
-                                    toggle.addEventListener('click', () => collapse(element));
-                                    element.parentNode.insertBefore(toggle, element);
-                                }
-                            } catch (e) {}
-                        }
-                        Array.from(element.children).forEach(processElement);
-                    }
-                };
-
-                return processElement;
-            }
-
-            function toggleAllNodes() {
-                const toggles = document.querySelectorAll('.json-toggle');
-                const someCollapsed = Array.from(toggles).some(t => t.classList.contains('collapsed'));
-                
-                toggles.forEach(toggle => {
-                    const content = toggle.nextElementSibling;
-                    if (someCollapsed) {
-                        toggle.classList.remove('collapsed');
-                        content.style.display = 'block';
-                    } else {
-                        toggle.classList.add('collapsed');
-                        content.style.display = 'none';
-                    }
-                });
-            }
-
-            function copyResponse() {
-                if (jsonResponse) {
-                    navigator.clipboard.writeText(JSON.stringify(jsonResponse, null, 2))
-                        .then(() => {
-                            const copyBtn = document.querySelector('[onclick="copyResponse()"]');
-                            const originalHtml = copyBtn.innerHTML;
-                            copyBtn.innerHTML = '<i class="bi bi-check"></i> Copied!';
-                            setTimeout(() => {
-                                copyBtn.innerHTML = originalHtml;
-                            }, 2000);
-                        });
-                }
-            }
-
-            function showResponse(response) {
-                jsonResponse = response;
-                const formatted = JSON.stringify(response, null, 2);
-                const responseContent = document.getElementById('responseContent');
-                responseContent.textContent = formatted;
-                hljs.highlightElement(responseContent);
-                makeCollapsible(response)(responseContent);
-                
-                const modal = new bootstrap.Modal(document.getElementById('responseModal'));
-                modal.show();
-            }
-        });
+        }
     </script>
-
-    @push('scripts')
-    <!-- Highlight.js CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
-    <!-- Highlight.js JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/json.min.js"></script>
-
-    <style>
-        .json-container {
-            position: relative;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .json-container pre {
-            margin: 0;
-            white-space: pre-wrap;
-        }
-
-        .collapsible:hover {
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .collapsed::after {
-            content: '...';
-            color: #999;
-        }
-
-        .json-toggle {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .json-toggle::before {
-            content: '▼';
-            display: inline-block;
-            margin-right: 5px;
-            transition: transform 0.1s;
-        }
-
-        .json-toggle.collapsed::before {
-            transform: rotate(-90deg);
-        }
-    </style>
-    @endpush
 @endsection

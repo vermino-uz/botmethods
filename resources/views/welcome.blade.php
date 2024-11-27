@@ -125,16 +125,12 @@
                 {{ config('app.name', 'Laravel') }}
             </a>
             <div class="d-flex">
-                @if (Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
-                    @else
-                        <a href="{{ route('login') }}" class="nav-link me-3">Login</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
-                        @endif
-                    @endauth
-                @endif
+                @auth
+                    <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="nav-link me-3">Login</a>
+                    <a href="{{ route('register') }}" class="btn btn-primary">Get Started</a>
+                @endauth
             </div>
         </div>
     </nav>

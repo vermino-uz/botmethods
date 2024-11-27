@@ -97,19 +97,153 @@
 
     <script>
         const apiMethods = {
-            'sendmessage': [
-                {'chat_id': 'int'},
-                {'message': 'string'}
-            ],
-            'getme': [],
-            sendphoto: [
-                {'chat_id': 'int'},
-                {'photo': 'url'},
-                {'caption': 'string'},
-                {'reply_to_message_id': 'int'}
-            ],
-            // Add more methods as needed
-        };
+    getUpdates: [
+        { offset: 'int' },
+        { limit: 'int' },
+        { timeout: 'int' },
+        { allowed_updates: 'array' }
+    ],
+    sendMessage: [
+        { chat_id: 'int' },
+        { text: 'string' },
+        { parse_mode: 'string' },
+        { reply_to_message_id: 'int' }
+    ],
+    forwardMessage: [
+        { chat_id: 'int' },
+        { from_chat_id: 'int' },
+        { message_id: 'int' }
+    ],
+    sendPhoto: [
+        { chat_id: 'int' },
+        { photo: 'url' },
+        { caption: 'string' },
+        { parse_mode: 'string' }
+    ],
+    sendAudio: [
+        { chat_id: 'int' },
+        { audio: 'url' },
+        { caption: 'string' },
+        { duration: 'int' }
+    ],
+    sendDocument: [
+        { chat_id: 'int' },
+        { document: 'url' },
+        { caption: 'string' }
+    ],
+    sendVideo: [
+        { chat_id: 'int' },
+        { video: 'url' },
+        { caption: 'string' },
+        { supports_streaming: 'boolean' }
+    ],
+    sendAnimation: [
+        { chat_id: 'int' },
+        { animation: 'url' },
+        { caption: 'string' }
+    ],
+    sendVoice: [
+        { chat_id: 'int' },
+        { voice: 'url' },
+        { caption: 'string' },
+        { duration: 'int' }
+    ],
+    sendLocation: [
+        { chat_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' }
+    ],
+    editMessageLiveLocation: [
+        { chat_id: 'int' },
+        { message_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' }
+    ],
+    stopMessageLiveLocation: [
+        { chat_id: 'int' },
+        { message_id: 'int' }
+    ],
+    sendVenue: [
+        { chat_id: 'int' },
+        { latitude: 'float' },
+        { longitude: 'float' },
+        { title: 'string' },
+        { address: 'string' }
+    ],
+    sendContact: [
+        { chat_id: 'int' },
+        { phone_number: 'string' },
+        { first_name: 'string' }
+    ],
+    sendPoll: [
+        { chat_id: 'int' },
+        { question: 'string' },
+        { options: 'array' },
+        { is_anonymous: 'boolean' }
+    ],
+    sendDice: [
+        { chat_id: 'int' }
+    ],
+    getUserProfilePhotos: [
+        { user_id: 'int' },
+        { offset: 'int' },
+        { limit: 'int' }
+    ],
+    getFile: [
+        { file_id: 'string' }
+    ],
+    kickChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    unbanChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    restrictChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' },
+        { permissions: 'object' }
+    ],
+    promoteChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' },
+        { can_change_info: 'boolean' }
+    ],
+    setChatPermissions: [
+        { chat_id: 'int' },
+        { permissions: 'object' }
+    ],
+    getChat: [
+        { chat_id: 'int' }
+    ],
+    getChatAdministrators: [
+        { chat_id: 'int' }
+    ],
+    getChatMemberCount: [
+        { chat_id: 'int' }
+    ],
+    getChatMember: [
+        { chat_id: 'int' },
+        { user_id: 'int' }
+    ],
+    answerCallbackQuery: [
+        { callback_query_id: 'string' },
+        { text: 'string' },
+        { show_alert: 'boolean' }
+    ],
+    editMessageText: [
+        { chat_id: 'int' },
+        { message_id: 'int' },
+        { text: 'string' },
+        { parse_mode: 'string' }
+    ],
+    deleteMessage: [
+        { chat_id: 'int' },
+        { message_id: 'int' }
+    ]
+};
+
 
         document.addEventListener('DOMContentLoaded', function() {
             const apiMethodSelect = document.getElementById('api-method');

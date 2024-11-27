@@ -118,6 +118,8 @@
         { timeout: 'int' },
         { allowed_updates: 'array' }
     ],
+    getWebhookInfo: [
+    ],
     setWebhook: [
         { url: 'url' }
     ],

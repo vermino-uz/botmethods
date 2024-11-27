@@ -25,34 +25,39 @@
 
             <!-- Bot Details -->
             <div class="card mb-4">
-                <div class="card-header">
-                    Bot Details
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Bot Details</span>
+                    <button class="btn btn-link p-0" type="button" data-bs-toggle="collapse" data-bs-target="#botDetailsCollapse" aria-expanded="true" aria-controls="botDetailsCollapse">
+                        <i class="bi bi-chevron-up"></i>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Bot Token</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" value="{{ $bot->token }}" readonly>
-                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->token }}">
-                                Copy
-                            </button>
+                <div class="collapse show" id="botDetailsCollapse">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Bot Token</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="{{ $bot->token }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->token }}">
+                                    Copy
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text">@</span>
-                            <input type="text" class="form-control" value="{{ $bot->username }}" readonly>
-                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->username }}">
-                                Copy
-                            </button>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text">@</span>
+                                <input type="text" class="form-control" value="{{ $bot->username }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->username }}">
+                                    Copy
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Created At</label>
-                        <input type="text" class="form-control" value="{{ $bot->created_at }}" readonly>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Created At</label>
+                            <input type="text" class="form-control" value="{{ $bot->created_at }}" readonly>
+                        </div>
                     </div>
                 </div>
             </div>

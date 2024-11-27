@@ -1,10 +1,10 @@
-<x-app-layout>
+<x-auth-layout>
     <div class="container py-4">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">Register</h5>
+                        <h5 class="mb-0">Create your account</h5>
                     </div>
                     <div class="card-body">
                         <form method="POST" action="{{ route('register') }}">
@@ -84,4 +84,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-auth-layout>

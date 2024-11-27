@@ -52,11 +52,13 @@
         .main-content {
             margin-left: 16.66667%;
             padding: 20px;
+            margin-top: 70px; /* Adjusts for the fixed header */
         }
 
         @media (max-width: 768px) {
             .main-content {
                 margin-left: 0;
+                margin-top: 70px; /* Adjusts for the fixed header on smaller screens */
             }
         }
     </style>

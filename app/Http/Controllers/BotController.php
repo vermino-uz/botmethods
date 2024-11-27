@@ -73,14 +73,13 @@ class BotController extends Controller
         }
 
         $validated = $request->validate([
-            'chat_id' => ['required', 'string'],
-            'message' => ['required', 'string']
+            'chat_id' => 'required|string',
+            'message' => 'required|string',
         ]);
 
         $response = Http::post("https://api.telegram.org/bot{$bot->token}/sendMessage", [
             'chat_id' => $validated['chat_id'],
             'text' => $validated['message'],
-            'parse_mode' => 'HTML'
         ]);
 
         return response()->json($response->json());
@@ -98,19 +97,90 @@ class BotController extends Controller
         return response()->json($response->json());
     }
 
-    public function setWebhook(Request $request)
+    public function setWebhook(Request $request, Bot $bot)
     {
-        // Placeholder for setWebhook functionality
+        // Ensure user can only use their own bots
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'url' => 'required|url',
+        ]);
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/setWebhook", [
+            'url' => $validated['url'],
+        ]);
+
+        return response()->json($response->json());
     }
 
-    public function deleteWebhook(Request $request)
+    public function getWebhookInfo(Bot $bot)
     {
-        // Placeholder for deleteWebhook functionality
+        // Ensure user can only use their own bots
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $response = Http::get("https://api.telegram.org/bot{$bot->token}/getWebhookInfo");
+
+        return response()->json($response->json());
     }
 
-    public function getWebhookInfo(Request $request)
+    public function deleteWebhook(Bot $bot)
     {
-        // Placeholder for getWebhookInfo functionality
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/deleteWebhook");
+
+        return response()->json($response->json());
+    }
+
+    public function sendPhoto(Request $request, Bot $bot)
+    {
+        $validated = $request->validate([
+            'chat_id' => 'required|string',
+            'photo' => 'required|url',
+        ]);
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/sendPhoto", [
+            'chat_id' => $validated['chat_id'],
+            'photo' => $validated['photo'],
+        ]);
+
+        return response()->json($response->json());
+    }
+
+    public function sendAudio(Request $request, Bot $bot)
+    {
+        $validated = $request->validate([
+            'chat_id' => 'required|string',
+            'audio' => 'required|url',
+        ]);
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/sendAudio", [
+            'chat_id' => $validated['chat_id'],
+            'audio' => $validated['audio'],
+        ]);
+
+        return response()->json($response->json());
+    }
+
+    public function sendVideo(Request $request, Bot $bot)
+    {
+        $validated = $request->validate([
+            'chat_id' => 'required|string',
+            'video' => 'required|url',
+        ]);
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/sendVideo", [
+            'chat_id' => $validated['chat_id'],
+            'video' => $validated['video'],
+        ]);
+
+        return response()->json($response->json());
     }
 
     public function forwardMessage(Request $request)
@@ -123,94 +193,164 @@ class BotController extends Controller
         // Placeholder for copyMessage functionality
     }
 
-    public function sendPhoto(Request $request)
+    public function sendSticker(Request $request)
     {
-        // Placeholder for sendPhoto functionality
+        // Placeholder for sendSticker functionality
     }
 
-    public function sendAudio(Request $request)
+    public function getStickerSet(Request $request)
     {
-        // Placeholder for sendAudio functionality
+        // Placeholder for getStickerSet functionality
     }
 
-    public function sendDocument(Request $request)
+    public function uploadStickerFile(Request $request)
     {
-        // Placeholder for sendDocument functionality
+        // Placeholder for uploadStickerFile functionality
     }
 
-    public function sendVideo(Request $request)
+    public function createNewStickerSet(Request $request)
     {
-        // Placeholder for sendVideo functionality
+        // Placeholder for createNewStickerSet functionality
     }
 
-    public function sendAnimation(Request $request)
+    public function addStickerToSet(Request $request)
     {
-        // Placeholder for sendAnimation functionality
+        // Placeholder for addStickerToSet functionality
     }
 
-    public function sendVoice(Request $request)
+    public function setStickerPositionInSet(Request $request)
     {
-        // Placeholder for sendVoice functionality
+        // Placeholder for setStickerPositionInSet functionality
     }
 
-    public function sendVideoNote(Request $request)
+    public function deleteStickerFromSet(Request $request)
     {
-        // Placeholder for sendVideoNote functionality
+        // Placeholder for deleteStickerFromSet functionality
     }
 
-    public function sendMediaGroup(Request $request)
+    public function setStickerEmojiList(Request $request)
     {
-        // Placeholder for sendMediaGroup functionality
+        // Placeholder for setStickerEmojiList functionality
     }
 
-    public function sendLocation(Request $request)
+    public function setStickerKeywords(Request $request)
     {
-        // Placeholder for sendLocation functionality
+        // Placeholder for setStickerKeywords functionality
     }
 
-    public function editMessageLiveLocation(Request $request)
+    public function setStickerMaskPosition(Request $request)
     {
-        // Placeholder for editMessageLiveLocation functionality
+        // Placeholder for setStickerMaskPosition functionality
     }
 
-    public function stopMessageLiveLocation(Request $request)
+    public function setStickerSetTitle(Request $request)
     {
-        // Placeholder for stopMessageLiveLocation functionality
+        // Placeholder for setStickerSetTitle functionality
     }
 
-    public function sendVenue(Request $request)
+    public function setStickerSetThumbnail(Request $request)
     {
-        // Placeholder for sendVenue functionality
+        // Placeholder for setStickerSetThumbnail functionality
     }
 
-    public function sendContact(Request $request)
+    public function setCustomEmojiStickerSetThumbnail(Request $request)
     {
-        // Placeholder for sendContact functionality
+        // Placeholder for setCustomEmojiStickerSetThumbnail functionality
     }
 
-    public function sendPoll(Request $request)
+    public function deleteStickerSet(Request $request)
     {
-        // Placeholder for sendPoll functionality
+        // Placeholder for deleteStickerSet functionality
     }
 
-    public function sendDice(Request $request)
+    public function answerInlineQuery(Request $request)
     {
-        // Placeholder for sendDice functionality
+        // Placeholder for answerInlineQuery functionality
     }
 
-    public function sendChatAction(Request $request)
+    public function answerWebAppQuery(Request $request)
     {
-        // Placeholder for sendChatAction functionality
+        // Placeholder for answerWebAppQuery functionality
     }
 
-    public function getUserProfilePhotos(Request $request)
+    public function sendInvoice(Request $request)
     {
-        // Placeholder for getUserProfilePhotos functionality
+        // Placeholder for sendInvoice functionality
     }
 
-    public function getFile(Request $request)
+    public function createInvoiceLink(Request $request)
     {
-        // Placeholder for getFile functionality
+        // Placeholder for createInvoiceLink functionality
+    }
+
+    public function answerShippingQuery(Request $request)
+    {
+        // Placeholder for answerShippingQuery functionality
+    }
+
+    public function answerPreCheckoutQuery(Request $request)
+    {
+        // Placeholder for answerPreCheckoutQuery functionality
+    }
+
+    public function setPassportDataErrors(Request $request)
+    {
+        // Placeholder for setPassportDataErrors functionality
+    }
+
+    public function sendGame(Request $request)
+    {
+        // Placeholder for sendGame functionality
+    }
+
+    public function setGameScore(Request $request)
+    {
+        // Placeholder for setGameScore functionality
+    }
+
+    public function getGameHighScores(Request $request)
+    {
+        // Placeholder for getGameHighScores functionality
+    }
+
+    public function logOut(Request $request)
+    {
+        // Placeholder for logOut functionality
+    }
+
+    public function close(Request $request)
+    {
+        // Placeholder for close functionality
+    }
+
+    public function editMessageText(Request $request)
+    {
+        // Placeholder for editMessageText functionality
+    }
+
+    public function editMessageCaption(Request $request)
+    {
+        // Placeholder for editMessageCaption functionality
+    }
+
+    public function editMessageMedia(Request $request)
+    {
+        // Placeholder for editMessageMedia functionality
+    }
+
+    public function editMessageReplyMarkup(Request $request)
+    {
+        // Placeholder for editMessageReplyMarkup functionality
+    }
+
+    public function stopPoll(Request $request)
+    {
+        // Placeholder for stopPoll functionality
+    }
+
+    public function deleteMessage(Request $request)
+    {
+        // Placeholder for deleteMessage functionality
     }
 
     public function banChatMember(Request $request)
@@ -391,165 +531,5 @@ class BotController extends Controller
     public function getMyDefaultAdministratorRights(Request $request)
     {
         // Placeholder for getMyDefaultAdministratorRights functionality
-    }
-
-    public function editMessageText(Request $request)
-    {
-        // Placeholder for editMessageText functionality
-    }
-
-    public function editMessageCaption(Request $request)
-    {
-        // Placeholder for editMessageCaption functionality
-    }
-
-    public function editMessageMedia(Request $request)
-    {
-        // Placeholder for editMessageMedia functionality
-    }
-
-    public function editMessageReplyMarkup(Request $request)
-    {
-        // Placeholder for editMessageReplyMarkup functionality
-    }
-
-    public function stopPoll(Request $request)
-    {
-        // Placeholder for stopPoll functionality
-    }
-
-    public function deleteMessage(Request $request)
-    {
-        // Placeholder for deleteMessage functionality
-    }
-
-    public function sendSticker(Request $request)
-    {
-        // Placeholder for sendSticker functionality
-    }
-
-    public function getStickerSet(Request $request)
-    {
-        // Placeholder for getStickerSet functionality
-    }
-
-    public function uploadStickerFile(Request $request)
-    {
-        // Placeholder for uploadStickerFile functionality
-    }
-
-    public function createNewStickerSet(Request $request)
-    {
-        // Placeholder for createNewStickerSet functionality
-    }
-
-    public function addStickerToSet(Request $request)
-    {
-        // Placeholder for addStickerToSet functionality
-    }
-
-    public function setStickerPositionInSet(Request $request)
-    {
-        // Placeholder for setStickerPositionInSet functionality
-    }
-
-    public function deleteStickerFromSet(Request $request)
-    {
-        // Placeholder for deleteStickerFromSet functionality
-    }
-
-    public function setStickerEmojiList(Request $request)
-    {
-        // Placeholder for setStickerEmojiList functionality
-    }
-
-    public function setStickerKeywords(Request $request)
-    {
-        // Placeholder for setStickerKeywords functionality
-    }
-
-    public function setStickerMaskPosition(Request $request)
-    {
-        // Placeholder for setStickerMaskPosition functionality
-    }
-
-    public function setStickerSetTitle(Request $request)
-    {
-        // Placeholder for setStickerSetTitle functionality
-    }
-
-    public function setStickerSetThumbnail(Request $request)
-    {
-        // Placeholder for setStickerSetThumbnail functionality
-    }
-
-    public function setCustomEmojiStickerSetThumbnail(Request $request)
-    {
-        // Placeholder for setCustomEmojiStickerSetThumbnail functionality
-    }
-
-    public function deleteStickerSet(Request $request)
-    {
-        // Placeholder for deleteStickerSet functionality
-    }
-
-    public function answerInlineQuery(Request $request)
-    {
-        // Placeholder for answerInlineQuery functionality
-    }
-
-    public function answerWebAppQuery(Request $request)
-    {
-        // Placeholder for answerWebAppQuery functionality
-    }
-
-    public function sendInvoice(Request $request)
-    {
-        // Placeholder for sendInvoice functionality
-    }
-
-    public function createInvoiceLink(Request $request)
-    {
-        // Placeholder for createInvoiceLink functionality
-    }
-
-    public function answerShippingQuery(Request $request)
-    {
-        // Placeholder for answerShippingQuery functionality
-    }
-
-    public function answerPreCheckoutQuery(Request $request)
-    {
-        // Placeholder for answerPreCheckoutQuery functionality
-    }
-
-    public function setPassportDataErrors(Request $request)
-    {
-        // Placeholder for setPassportDataErrors functionality
-    }
-
-    public function sendGame(Request $request)
-    {
-        // Placeholder for sendGame functionality
-    }
-
-    public function setGameScore(Request $request)
-    {
-        // Placeholder for setGameScore functionality
-    }
-
-    public function getGameHighScores(Request $request)
-    {
-        // Placeholder for getGameHighScores functionality
-    }
-
-    public function logOut(Request $request)
-    {
-        // Placeholder for logOut functionality
-    }
-
-    public function close(Request $request)
-    {
-        // Placeholder for close functionality
     }
 }

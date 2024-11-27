@@ -25,62 +25,72 @@
 
             <!-- Bot Details -->
             <div class="card mb-4">
-                <div class="card-header">
-                    Bot Details
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>Bot Details</div>
+                    <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="collapse" data-bs-target="#botDetailsCollapse" aria-expanded="true" aria-controls="botDetailsCollapse">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Bot Token</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" value="{{ $bot->token }}" readonly>
-                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->token }}">
-                                Copy
-                            </button>
+                <div class="collapse show" id="botDetailsCollapse">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Bot Token</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="{{ $bot->token }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->token }}">
+                                    Copy
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <div class="input-group">
-                            <span class="input-group-text">@</span>
-                            <input type="text" class="form-control" value="{{ $bot->username }}" readonly>
-                            <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->username }}">
-                                Copy
-                            </button>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text">@</span>
+                                <input type="text" class="form-control" value="{{ $bot->username }}" readonly>
+                                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard(this)" data-copy-text="{{ $bot->username }}">
+                                    Copy
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Created At</label>
-                        <input type="text" class="form-control" value="{{ $bot->created_at }}" readonly>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Created At</label>
+                            <input type="text" class="form-control" value="{{ $bot->created_at }}" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Bot API Methods -->
             <div class="card">
-                <div class="card-header">
-                    API Methods
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div>API Methods</div>
+                    <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="collapse" data-bs-target="#apiMethodsCollapse" aria-expanded="true" aria-controls="apiMethodsCollapse">
+                        <i class="bi bi-info-circle"></i>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <form id="api-method-form">
-                        <div class="mb-3">
-                            <label for="method-search" class="form-label">Search Methods</label>
-                            <input type="text" class="form-control" id="method-search" placeholder="Search for a method...">
-                        </div>
-                        <div class="mb-3">
-                            <label for="api-method" class="form-label">Select Method</label>
-                            <select class="form-select" id="api-method" name="api-method">
-                            </select>
-                        </div>
+                <div class="collapse show" id="apiMethodsCollapse">
+                    <div class="card-body">
+                        <form id="api-method-form">
+                            <div class="mb-3">
+                                <label for="method-search" class="form-label">Search Methods</label>
+                                <input type="text" class="form-control" id="method-search" placeholder="Search for a method...">
+                            </div>
+                            <div class="mb-3">
+                                <label for="api-method" class="form-label">Select Method</label>
+                                <select class="form-select" id="api-method" name="api-method">
+                                </select>
+                            </div>
 
-                        <!-- Dynamic Fields -->
-                        <div id="method-fields">
-                            <!-- Fields will be dynamically inserted here -->
-                        </div>
+                            <!-- Dynamic Fields -->
+                            <div id="method-fields">
+                                <!-- Fields will be dynamically inserted here -->
+                            </div>
 
-                        <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
-                    </form>
+                            <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </main>

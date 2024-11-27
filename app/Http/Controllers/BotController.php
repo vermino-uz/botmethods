@@ -32,10 +32,23 @@ class BotController extends Controller
             'token' => ['required', 'string', 'unique:bots,token']
         ]);
 
+        // Get bot information from Telegram
+        $response = Http::get("https://api.telegram.org/bot{$validated['token']}/getMe");
+        
+        if (!$response->successful()) {
+            return back()->withErrors(['token' => 'Invalid bot token'])->withInput();
+        }
+
+        $botInfo = $response->json();
+        if (!isset($botInfo['ok']) || !$botInfo['ok']) {
+            return back()->withErrors(['token' => 'Failed to get bot information'])->withInput();
+        }
+
         $bot = new Bot();
         $bot->user_id = Auth::id();
-        $bot->name = $validated['name'];
+        $bot->name = $validated['name'] ?? $botInfo['result']['first_name'];
         $bot->token = $validated['token'];
+        $bot->username = $botInfo['result']['username'];
         $bot->save();
 
         return redirect()->route('bots.show', $bot)

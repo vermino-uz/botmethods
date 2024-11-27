@@ -13,6 +13,7 @@ class Bot extends Model
         'name',
         'token',
         'user_id',
+        'username',
     ];
 
     /**

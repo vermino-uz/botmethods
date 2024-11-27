@@ -24,7 +24,7 @@
         <p class="text-muted mb-4">Select a bot from the sidebar or create a new one to get started</p>
         
         @if($bots->isEmpty())
-            <a href="{{ route('bots.create') }}" class="btn btn-primary">
+            <a href="{{ route('bots.create') }}" class="btn btn-primary" style="background-color: #3390EC; border-color: #3390EC;">
                 <i class="bi bi-plus-lg me-2"></i>Create Your First Bot
             </a>
         @endif

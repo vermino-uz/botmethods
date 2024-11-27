@@ -63,21 +63,21 @@
                 <div class="p-3 bg-white rounded-3 h-100 shadow-sm">
                     <div class="feature-icon"><i class="bi bi-lightning-charge"></i></div>
                     <h3 class="h5 mb-2">Quick Setup</h3>
-                    <p class="text-muted mb-0">Get your bot up and running in minutes with our intuitive interface.</p>
+                    <p class="text-muted mb-0">Debug and test your bot effortlessly with our comprehensive toolkit.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-3 bg-white rounded-3 h-100 shadow-sm">
                     <div class="feature-icon"><i class="bi bi-gear"></i></div>
                     <h3 class="h5 mb-2">Powerful Features</h3>
-                    <p class="text-muted mb-0">Access advanced bot management tools and analytics.</p>
+                    <p class="text-muted mb-0">Test every possible method in the Telegram Bot API with our comprehensive toolkit.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-3 bg-white rounded-3 h-100 shadow-sm">
                     <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
                     <h3 class="h5 mb-2">Secure & Reliable</h3>
-                    <p class="text-muted mb-0">Built with security in mind, ensuring your bots run smoothly 24/7.</p>
+                    <p class="text-muted mb-0">Your bot tokens are securely stored and never shared.</p>
                 </div>
             </div>
         </div>

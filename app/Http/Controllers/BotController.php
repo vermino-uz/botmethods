@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class BotController extends Controller
 {
@@ -49,5 +50,51 @@ class BotController extends Controller
         }
 
         return view('bots.show', compact('bot'));
+    }
+
+    public function destroy(Bot $bot)
+    {
+        // Ensure user can only delete their own bots
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $bot->delete();
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Bot deleted successfully');
+    }
+
+    public function sendMessage(Request $request, Bot $bot)
+    {
+        // Ensure user can only use their own bots
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'chat_id' => ['required', 'string'],
+            'message' => ['required', 'string']
+        ]);
+
+        $response = Http::post("https://api.telegram.org/bot{$bot->token}/sendMessage", [
+            'chat_id' => $validated['chat_id'],
+            'text' => $validated['message'],
+            'parse_mode' => 'HTML'
+        ]);
+
+        return response()->json($response->json());
+    }
+
+    public function getUpdates(Bot $bot)
+    {
+        // Ensure user can only use their own bots
+        if ($bot->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $response = Http::get("https://api.telegram.org/bot{$bot->token}/getUpdates");
+
+        return response()->json($response->json());
     }
 }

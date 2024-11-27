@@ -20,7 +20,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Bot management routes
-    Route::resource('bots', BotController::class)->only(['index', 'create', 'store', 'show']);
+    Route::resource('bots', BotController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+    
+    // Bot API routes
+    Route::post('/bots/{bot}/send-message', [BotController::class, 'sendMessage'])->name('bots.send-message');
+    Route::get('/bots/{bot}/updates', [BotController::class, 'getUpdates'])->name('bots.updates');
 });
 
 Route::fallback(function () {

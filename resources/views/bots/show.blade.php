@@ -103,6 +103,14 @@
         { timeout: 'int' },
         { allowed_updates: 'array' }
     ],
+    setWebhook: [
+        { url: 'url' }
+    ],
+    deleteWebhook: [
+        { drop_pending_updates: 'boolean' }
+    ],
+    getMe: [
+    ],
     sendMessage: [
         { chat_id: 'int' },
         { text: 'string' },

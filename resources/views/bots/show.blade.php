@@ -72,72 +72,120 @@
                         API Methods
                     </div>
                     <div class="card-body">
-                        <!-- Send Message Form -->
-                        <form class="mb-4 api-method-form" action="{{ route('bots.send-message', $bot) }}" method="POST">
-                            @csrf
-                            <h5>Send Message</h5>
+                        <form id="api-method-form">
                             <div class="mb-3">
-                                <label for="chat_id" class="form-label">Chat ID</label>
-                                <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+                                <label for="api-method" class="form-label">Select Method</label>
+                                <select class="form-select" id="api-method" name="api-method">
+                                    <option value="send-message">Send Message</option>
+                                    <option value="get-updates">Get Updates</option>
+                                </select>
                             </div>
-                            <div class="mb-3">
-                                <label for="message" class="form-label">Message</label>
-                                <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+
+                            <!-- Dynamic Fields -->
+                            <div id="method-fields">
+                                <!-- Fields will be dynamically inserted here -->
                             </div>
-                            <button type="submit" class="btn btn-primary">Send Message</button>
-                        </form>
 
-                        <hr>
-
-                        <!-- Get Updates Form -->
-                        <form class="mb-4 api-method-form" action="{{ route('bots.updates', $bot) }}" method="GET">
-                            <h5>Get Updates</h5>
-                            <button type="submit" class="btn btn-primary">Get Updates</button>
+                            <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
                         </form>
                     </div>
                 </div>
-
-                <!-- Delete Bot Form -->
-                <form id="delete-bot-form" action="{{ route('bots.destroy', $bot) }}" method="POST" class="d-none">
-                    @csrf
-                    @method('DELETE')
-                </form>
             </main>
         </div>
-    </div>
 
-    <!-- API Response Modal -->
-    <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="apiResponseModalLabel">API Response</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center" id="modalSpinner">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+        <!-- API Response Modal -->
+        <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="apiResponseModalLabel">API Response</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div id="apiResponseBody"></div>
+                    <div class="modal-body">
+                        <pre id="apiResponseContent"></pre>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    @push('scripts')
-    <script>
-        function copyToClipboard(button) {
-            const text = button.dataset.copyText;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = button.innerText;
-                button.innerText = 'Copied!';
-                setTimeout(() => {
-                    button.innerText = originalText;
-                }, 2000);
+        <!-- Delete Bot Form -->
+        <form id="delete-bot-form" action="{{ route('bots.destroy', $bot) }}" method="POST" class="d-none">
+            @csrf
+            @method('DELETE')
+        </form>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const methodFields = {
+                    'send-message': `
+                        <div class="mb-3">
+                            <label for="chat_id" class="form-label">Chat ID</label>
+                            <input type="text" class="form-control" id="chat_id" name="chat_id" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+                        </div>
+                    `,
+                    'get-updates': ''
+                };
+
+                const apiMethodSelect = document.getElementById('api-method');
+                const methodFieldsContainer = document.getElementById('method-fields');
+
+                function updateMethodFields() {
+                    const selectedMethod = apiMethodSelect.value;
+                    methodFieldsContainer.innerHTML = methodFields[selectedMethod] || '';
+                }
+
+                apiMethodSelect.addEventListener('change', updateMethodFields);
+                updateMethodFields();
             });
-        }
-    </script>
-    @endpush
+
+            function submitApiRequest() {
+                const form = document.getElementById('api-method-form');
+                const formData = new FormData(form);
+                const method = formData.get('api-method');
+                let url = '';
+                let options = {};
+
+                if (method === 'send-message') {
+                    url = `{{ route('bots.send-message', $bot) }}`;
+                    options = {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            chat_id: formData.get('chat_id'),
+                            message: formData.get('message')
+                        })
+                    };
+                } else if (method === 'get-updates') {
+                    url = `{{ route('bots.updates', $bot) }}`;
+                    options = {
+                        method: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        }
+                    };
+                }
+
+                fetch(url, options)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('apiResponseContent').textContent = JSON.stringify(data, null, 2);
+                        new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
+                    })
+                    .catch(error => {
+                        document.getElementById('apiResponseContent').textContent = 'Error: ' + error;
+                        new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
+                    });
+            }
+        </script>
+    </div>
 </x-app-layout>

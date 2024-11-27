@@ -101,7 +101,13 @@
                 {'chat_id': 'int'},
                 {'message': 'string'}
             ],
-            'getme': []
+            'getme': [],
+            sendphoto: [
+                {'chat_id': 'int'},
+                {'photo': 'url'},
+                {'caption': 'string'},
+                {'reply_to_message_id': 'int'}
+            ],
             // Add more methods as needed
         };
 

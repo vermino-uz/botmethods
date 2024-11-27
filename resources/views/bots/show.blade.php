@@ -129,224 +129,89 @@
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
 
+            // List of Telegram Bot API methods with their parameters
             const apiMethods = {
-                getUpdates: [
-                    { offset: 'int' },
-                    { limit: 'int' },
-                    { timeout: 'int' },
-                    { allowed_updates: 'array' }
-                ],
-                getWebhookInfo: [
-                ],
-                setWebhook: [
-                    { url: 'url' }
-                ],
-                deleteWebhook: [
-                    { drop_pending_updates: 'boolean' }
-                ],
-                getMe: [
-                ],
-                sendMessage: [
-                    { chat_id: 'int' },
-                    { text: 'string' },
-                    { parse_mode: 'string' },
-                    { reply_to_message_id: 'int' }
-                ],
-                forwardMessage: [
-                    { chat_id: 'int' },
-                    { from_chat_id: 'int' },
-                    { message_id: 'int' }
-                ],
-                sendPhoto: [
-                    { chat_id: 'int' },
-                    { photo: 'url' },
-                    { caption: 'string' },
-                    { parse_mode: 'string' }
-                ],
-                sendAudio: [
-                    { chat_id: 'int' },
-                    { audio: 'url' },
-                    { caption: 'string' },
-                    { duration: 'int' }
-                ],
-                sendDocument: [
-                    { chat_id: 'int' },
-                    { document: 'url' },
-                    { caption: 'string' }
-                ],
-                sendVideo: [
-                    { chat_id: 'int' },
-                    { video: 'url' },
-                    { caption: 'string' },
-                    { supports_streaming: 'boolean' }
-                ],
-                sendAnimation: [
-                    { chat_id: 'int' },
-                    { animation: 'url' },
-                    { caption: 'string' }
-                ],
-                sendVoice: [
-                    { chat_id: 'int' },
-                    { voice: 'url' },
-                    { caption: 'string' },
-                    { duration: 'int' }
-                ],
-                sendLocation: [
-                    { chat_id: 'int' },
-                    { latitude: 'float' },
-                    { longitude: 'float' }
-                ],
-                editMessageLiveLocation: [
-                    { chat_id: 'int' },
-                    { message_id: 'int' },
-                    { latitude: 'float' },
-                    { longitude: 'float' }
-                ],
-                stopMessageLiveLocation: [
-                    { chat_id: 'int' },
-                    { message_id: 'int' }
-                ],
-                sendVenue: [
-                    { chat_id: 'int' },
-                    { latitude: 'float' },
-                    { longitude: 'float' },
-                    { title: 'string' },
-                    { address: 'string' }
-                ],
-                sendContact: [
-                    { chat_id: 'int' },
-                    { phone_number: 'string' },
-                    { first_name: 'string' }
-                ],
-                sendPoll: [
-                    { chat_id: 'int' },
-                    { question: 'string' },
-                    { options: 'array' },
-                    { is_anonymous: 'boolean' }
-                ],
-                sendDice: [
-                    { chat_id: 'int' }
-                ],
-                getUserProfilePhotos: [
-                    { user_id: 'int' },
-                    { offset: 'int' },
-                    { limit: 'int' }
-                ],
-                getFile: [
-                    { file_id: 'string' }
-                ],
-                kickChatMember: [
-                    { chat_id: 'int' },
-                    { user_id: 'int' }
-                ],
-                unbanChatMember: [
-                    { chat_id: 'int' },
-                    { user_id: 'int' }
-                ],
-                restrictChatMember: [
-                    { chat_id: 'int' },
-                    { user_id: 'int' },
-                    { permissions: 'object' }
-                ],
-                promoteChatMember: [
-                    { chat_id: 'int' },
-                    { user_id: 'int' },
-                    { can_change_info: 'boolean' }
-                ],
-                setChatPermissions: [
-                    { chat_id: 'int' },
-                    { permissions: 'object' }
-                ],
-                getChat: [
-                    { chat_id: 'int' }
-                ],
-                getChatAdministrators: [
-                    { chat_id: 'int' }
-                ],
-                getChatMemberCount: [
-                    { chat_id: 'int' }
-                ],
-                getChatMember: [
-                    { chat_id: 'int' },
-                    { user_id: 'int' }
-                ],
-                answerCallbackQuery: [
-                    { callback_query_id: 'string' },
-                    { text: 'string' },
-                    { show_alert: 'boolean' }
-                ],
-                editMessageText: [
-                    { chat_id: 'int' },
-                    { message_id: 'int' },
-                    { text: 'string' },
-                    { parse_mode: 'string' }
-                ],
-                deleteMessage: [
-                    { chat_id: 'int' },
-                    { message_id: 'int' }
-                ]
+                getMe: {},
+                getUpdates: {
+                    offset: { type: 'number', description: 'Identifier of the first update to be returned' },
+                    limit: { type: 'number', description: 'Limits the number of updates to be retrieved' },
+                    timeout: { type: 'number', description: 'Timeout in seconds for long polling' },
+                    allowed_updates: { type: 'string', description: 'List of update types to receive' }
+                },
+                sendMessage: {
+                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' },
+                    text: { type: 'string', required: true, description: 'Text of the message to be sent' },
+                    parse_mode: { type: 'string', description: 'Mode for parsing entities in the message text' },
+                    disable_notification: { type: 'boolean', description: 'Sends the message silently' }
+                },
+                sendPhoto: {
+                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' },
+                    photo: { type: 'string', required: true, description: 'Photo to send (file_id or URL)' },
+                    caption: { type: 'string', description: 'Photo caption' },
+                    parse_mode: { type: 'string', description: 'Mode for parsing entities in the caption' }
+                },
+                getChat: {
+                    chat_id: { type: 'string', required: true, description: 'Unique identifier for the target chat' }
+                }
             };
 
-            // Populate dropdown initially
-            for (const method in apiMethods) {
-                const option = document.createElement('option');
-                option.value = method;
-                option.textContent = method.replace(/([a-z])([A-Z])/g, '$1 $2'); // Converts camelCase to spaced words
-                apiMethodSelect.appendChild(option);
+            // Populate method select on page load
+            function populateSelect(methods) {
+                apiMethodSelect.innerHTML = '<option value="">Select a method</option>';
+                Object.keys(methods).sort().forEach(method => {
+                    const option = document.createElement('option');
+                    option.value = method;
+                    option.textContent = method;
+                    apiMethodSelect.appendChild(option);
+                });
             }
 
+            // Initial population
+            populateSelect(apiMethods);
+
+            // Search functionality
             methodSearchInput.addEventListener('input', function() {
-                const searchTerm = methodSearchInput.value.toLowerCase();
-                let matchFound = false;
-
-                for (let i = 0; i < apiMethodSelect.options.length; i++) {
-                    const option = apiMethodSelect.options[i];
-                    const text = option.textContent.toLowerCase();
-
-                    if (text.includes(searchTerm)) {
-                        option.style.display = '';
-                        if (!matchFound) {
-                            apiMethodSelect.selectedIndex = i;
-                            matchFound = true;
-                        }
-                    } else {
-                        option.style.display = 'none';
-                    }
-                }
-
-                // Trigger change event to update fields
-                if (matchFound) {
-                    apiMethodSelect.dispatchEvent(new Event('change'));
-                }
+                const searchTerm = this.value.toLowerCase();
+                const filteredMethods = Object.keys(apiMethods)
+                    .filter(method => method.toLowerCase().includes(searchTerm))
+                    .reduce((obj, key) => {
+                        obj[key] = apiMethods[key];
+                        return obj;
+                    }, {});
+                populateSelect(filteredMethods);
             });
 
-            // Update form fields on method change
+            // Generate parameter fields when method is selected
             apiMethodSelect.addEventListener('change', function() {
-                const selectedMethod = apiMethodSelect.value;
+                const selectedMethod = this.value;
                 methodFieldsContainer.innerHTML = '';
 
-                if (apiMethods[selectedMethod]) {
-                    apiMethods[selectedMethod].forEach(field => {
-                        const fieldName = Object.keys(field)[0];
-                        const fieldType = field[fieldName];
-                        const formGroup = document.createElement('div');
-                        formGroup.className = 'mb-3';
-
+                if (selectedMethod && apiMethods[selectedMethod]) {
+                    const parameters = apiMethods[selectedMethod];
+                    Object.entries(parameters).forEach(([param, details]) => {
+                        const div = document.createElement('div');
+                        div.className = 'mb-3';
+                        
                         const label = document.createElement('label');
                         label.className = 'form-label';
-                        label.setAttribute('for', fieldName);
-                        label.textContent = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
-
+                        label.htmlFor = param;
+                        label.textContent = `${param}${details.required ? ' *' : ''}`;
+                        
                         const input = document.createElement('input');
-                        input.className = 'form-control';
-                        input.id = fieldName;
-                        input.name = fieldName;
-                        input.type = fieldType === 'int' ? 'number' : 'text';
-                        input.required = true;
-
-                        formGroup.appendChild(label);
-                        formGroup.appendChild(input);
-                        methodFieldsContainer.appendChild(formGroup);
+                        input.type = details.type === 'boolean' ? 'checkbox' : 'text';
+                        input.className = details.type === 'boolean' ? 'form-check-input' : 'form-control';
+                        input.id = param;
+                        input.name = param;
+                        if (details.required) input.required = true;
+                        
+                        const small = document.createElement('small');
+                        small.className = 'form-text text-muted';
+                        small.textContent = details.description;
+                        
+                        div.appendChild(label);
+                        div.appendChild(input);
+                        div.appendChild(small);
+                        methodFieldsContainer.appendChild(div);
                     });
                 }
             });

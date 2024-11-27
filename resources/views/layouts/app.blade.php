@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -210,6 +210,73 @@
                 z-index: 1035;
             }
         }
+
+        [data-bs-theme="dark"] {
+            --bs-body-bg: #212529;
+            --bs-body-color: #dee2e6;
+            --bs-primary: #3390EC;
+            --bs-primary-rgb: 51, 144, 236;
+        }
+
+        [data-bs-theme="dark"] .card {
+            --bs-card-bg: #2C3338;
+            --bs-card-border-color: #373B3E;
+        }
+
+        [data-bs-theme="dark"] .navbar {
+            --bs-navbar-color: #dee2e6;
+            background-color: #2C3338 !important;
+            border-bottom: 1px solid #373B3E;
+        }
+
+        [data-bs-theme="dark"] .sidebar {
+            background-color: #2C3338;
+            border-right: 1px solid #373B3E;
+        }
+
+        [data-bs-theme="dark"] .nav-link {
+            color: #dee2e6;
+        }
+
+        [data-bs-theme="dark"] .nav-link:hover {
+            color: #ffffff;
+            background-color: #373B3E;
+        }
+
+        [data-bs-theme="dark"] .nav-link.active {
+            background-color: #3390EC;
+            color: #ffffff;
+        }
+
+        [data-bs-theme="dark"] .form-control {
+            background-color: #2C3338;
+            border-color: #373B3E;
+            color: #dee2e6;
+        }
+
+        [data-bs-theme="dark"] .form-control:focus {
+            background-color: #2C3338;
+            border-color: #3390EC;
+            color: #dee2e6;
+        }
+
+        [data-bs-theme="dark"] .text-muted {
+            color: #adb5bd !important;
+        }
+
+        .theme-icon {
+            width: 1em;
+            height: 1em;
+            display: none;
+        }
+
+        [data-bs-theme="dark"] .theme-icon-dark {
+            display: inline-block;
+        }
+
+        [data-bs-theme="light"] .theme-icon-light {
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
@@ -264,6 +331,14 @@
                             </div>
                         </li>
                     @endguest
+                    <button class="btn btn-link nav-link px-3 me-2" id="theme-toggle">
+                        <svg class="theme-icon theme-icon-light" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                        <svg class="theme-icon theme-icon-dark" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </button>
                 </ul>
             </div>
         </div>
@@ -343,6 +418,37 @@
                 }, 2000);
             });
         }
+
+        // Theme toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Check for saved theme preference, otherwise use system preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                html.setAttribute('data-bs-theme', savedTheme);
+            } else {
+                const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                html.setAttribute('data-bs-theme', systemTheme);
+            }
+
+            // Theme toggle handler
+            themeToggle.addEventListener('click', function() {
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+
+            // Listen for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (!localStorage.getItem('theme')) {
+                    html.setAttribute('data-bs-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        });
     </script>
 </body>
 </html>

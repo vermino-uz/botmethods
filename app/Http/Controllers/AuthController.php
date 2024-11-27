@@ -14,7 +14,7 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -36,7 +36,7 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],

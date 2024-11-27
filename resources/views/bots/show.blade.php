@@ -63,23 +63,25 @@
                     API Methods
                 </div>
                 <div class="card-body">
-                    <form id="api-method-form">
-                        <div class="mb-3">
-                            <label for="method-search" class="form-label">Search Methods</label>
-                            <input type="text" class="form-control" id="method-search" placeholder="Search for a method...">
-                        </div>
+                    <form id="api-method-form" onsubmit="return submitApiRequest()">
                         <div class="mb-3">
                             <label for="api-method" class="form-label">Select Method</label>
-                            <select class="form-select" id="api-method" name="api-method">
-                            </select>
+                            <div class="input-group">
+                                <input type="text" id="method-search" class="form-control" placeholder="Search methods...">
+                                <select id="api-method" name="api-method" class="form-select" required>
+                                    <option value="">Select a method</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <!-- Dynamic Fields -->
-                        <div id="method-fields">
-                            <!-- Fields will be dynamically inserted here -->
+                        <div id="method-fields" class="mb-3">
+                            <!-- Method parameters will be dynamically added here -->
                         </div>
 
-                        <button type="button" class="btn btn-primary" onclick="submitApiRequest()">Submit</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-send"></i>
+                            Send Request
+                        </button>
                     </form>
                 </div>
             </div>
@@ -120,169 +122,170 @@
     </form>
 
     <script>
-        const apiMethods = {
-    getUpdates: [
-        { offset: 'int' },
-        { limit: 'int' },
-        { timeout: 'int' },
-        { allowed_updates: 'array' }
-    ],
-    getWebhookInfo: [
-    ],
-    setWebhook: [
-        { url: 'url' }
-    ],
-    deleteWebhook: [
-        { drop_pending_updates: 'boolean' }
-    ],
-    getMe: [
-    ],
-    sendMessage: [
-        { chat_id: 'int' },
-        { text: 'string' },
-        { parse_mode: 'string' },
-        { reply_to_message_id: 'int' }
-    ],
-    forwardMessage: [
-        { chat_id: 'int' },
-        { from_chat_id: 'int' },
-        { message_id: 'int' }
-    ],
-    sendPhoto: [
-        { chat_id: 'int' },
-        { photo: 'url' },
-        { caption: 'string' },
-        { parse_mode: 'string' }
-    ],
-    sendAudio: [
-        { chat_id: 'int' },
-        { audio: 'url' },
-        { caption: 'string' },
-        { duration: 'int' }
-    ],
-    sendDocument: [
-        { chat_id: 'int' },
-        { document: 'url' },
-        { caption: 'string' }
-    ],
-    sendVideo: [
-        { chat_id: 'int' },
-        { video: 'url' },
-        { caption: 'string' },
-        { supports_streaming: 'boolean' }
-    ],
-    sendAnimation: [
-        { chat_id: 'int' },
-        { animation: 'url' },
-        { caption: 'string' }
-    ],
-    sendVoice: [
-        { chat_id: 'int' },
-        { voice: 'url' },
-        { caption: 'string' },
-        { duration: 'int' }
-    ],
-    sendLocation: [
-        { chat_id: 'int' },
-        { latitude: 'float' },
-        { longitude: 'float' }
-    ],
-    editMessageLiveLocation: [
-        { chat_id: 'int' },
-        { message_id: 'int' },
-        { latitude: 'float' },
-        { longitude: 'float' }
-    ],
-    stopMessageLiveLocation: [
-        { chat_id: 'int' },
-        { message_id: 'int' }
-    ],
-    sendVenue: [
-        { chat_id: 'int' },
-        { latitude: 'float' },
-        { longitude: 'float' },
-        { title: 'string' },
-        { address: 'string' }
-    ],
-    sendContact: [
-        { chat_id: 'int' },
-        { phone_number: 'string' },
-        { first_name: 'string' }
-    ],
-    sendPoll: [
-        { chat_id: 'int' },
-        { question: 'string' },
-        { options: 'array' },
-        { is_anonymous: 'boolean' }
-    ],
-    sendDice: [
-        { chat_id: 'int' }
-    ],
-    getUserProfilePhotos: [
-        { user_id: 'int' },
-        { offset: 'int' },
-        { limit: 'int' }
-    ],
-    getFile: [
-        { file_id: 'string' }
-    ],
-    kickChatMember: [
-        { chat_id: 'int' },
-        { user_id: 'int' }
-    ],
-    unbanChatMember: [
-        { chat_id: 'int' },
-        { user_id: 'int' }
-    ],
-    restrictChatMember: [
-        { chat_id: 'int' },
-        { user_id: 'int' },
-        { permissions: 'object' }
-    ],
-    promoteChatMember: [
-        { chat_id: 'int' },
-        { user_id: 'int' },
-        { can_change_info: 'boolean' }
-    ],
-    setChatPermissions: [
-        { chat_id: 'int' },
-        { permissions: 'object' }
-    ],
-    getChat: [
-        { chat_id: 'int' }
-    ],
-    getChatAdministrators: [
-        { chat_id: 'int' }
-    ],
-    getChatMemberCount: [
-        { chat_id: 'int' }
-    ],
-    getChatMember: [
-        { chat_id: 'int' },
-        { user_id: 'int' }
-    ],
-    answerCallbackQuery: [
-        { callback_query_id: 'string' },
-        { text: 'string' },
-        { show_alert: 'boolean' }
-    ],
-    editMessageText: [
-        { chat_id: 'int' },
-        { message_id: 'int' },
-        { text: 'string' },
-        { parse_mode: 'string' }
-    ],
-    deleteMessage: [
-        { chat_id: 'int' },
-        { message_id: 'int' }
-    ]
-};
-
-
         document.addEventListener('DOMContentLoaded', function() {
+            hljs.highlightAll();
+            
             const methodSearchInput = document.getElementById('method-search');
             const apiMethodSelect = document.getElementById('api-method');
             const methodFieldsContainer = document.getElementById('method-fields');
+
+            const apiMethods = {
+                getUpdates: [
+                    { offset: 'int' },
+                    { limit: 'int' },
+                    { timeout: 'int' },
+                    { allowed_updates: 'array' }
+                ],
+                getWebhookInfo: [
+                ],
+                setWebhook: [
+                    { url: 'url' }
+                ],
+                deleteWebhook: [
+                    { drop_pending_updates: 'boolean' }
+                ],
+                getMe: [
+                ],
+                sendMessage: [
+                    { chat_id: 'int' },
+                    { text: 'string' },
+                    { parse_mode: 'string' },
+                    { reply_to_message_id: 'int' }
+                ],
+                forwardMessage: [
+                    { chat_id: 'int' },
+                    { from_chat_id: 'int' },
+                    { message_id: 'int' }
+                ],
+                sendPhoto: [
+                    { chat_id: 'int' },
+                    { photo: 'url' },
+                    { caption: 'string' },
+                    { parse_mode: 'string' }
+                ],
+                sendAudio: [
+                    { chat_id: 'int' },
+                    { audio: 'url' },
+                    { caption: 'string' },
+                    { duration: 'int' }
+                ],
+                sendDocument: [
+                    { chat_id: 'int' },
+                    { document: 'url' },
+                    { caption: 'string' }
+                ],
+                sendVideo: [
+                    { chat_id: 'int' },
+                    { video: 'url' },
+                    { caption: 'string' },
+                    { supports_streaming: 'boolean' }
+                ],
+                sendAnimation: [
+                    { chat_id: 'int' },
+                    { animation: 'url' },
+                    { caption: 'string' }
+                ],
+                sendVoice: [
+                    { chat_id: 'int' },
+                    { voice: 'url' },
+                    { caption: 'string' },
+                    { duration: 'int' }
+                ],
+                sendLocation: [
+                    { chat_id: 'int' },
+                    { latitude: 'float' },
+                    { longitude: 'float' }
+                ],
+                editMessageLiveLocation: [
+                    { chat_id: 'int' },
+                    { message_id: 'int' },
+                    { latitude: 'float' },
+                    { longitude: 'float' }
+                ],
+                stopMessageLiveLocation: [
+                    { chat_id: 'int' },
+                    { message_id: 'int' }
+                ],
+                sendVenue: [
+                    { chat_id: 'int' },
+                    { latitude: 'float' },
+                    { longitude: 'float' },
+                    { title: 'string' },
+                    { address: 'string' }
+                ],
+                sendContact: [
+                    { chat_id: 'int' },
+                    { phone_number: 'string' },
+                    { first_name: 'string' }
+                ],
+                sendPoll: [
+                    { chat_id: 'int' },
+                    { question: 'string' },
+                    { options: 'array' },
+                    { is_anonymous: 'boolean' }
+                ],
+                sendDice: [
+                    { chat_id: 'int' }
+                ],
+                getUserProfilePhotos: [
+                    { user_id: 'int' },
+                    { offset: 'int' },
+                    { limit: 'int' }
+                ],
+                getFile: [
+                    { file_id: 'string' }
+                ],
+                kickChatMember: [
+                    { chat_id: 'int' },
+                    { user_id: 'int' }
+                ],
+                unbanChatMember: [
+                    { chat_id: 'int' },
+                    { user_id: 'int' }
+                ],
+                restrictChatMember: [
+                    { chat_id: 'int' },
+                    { user_id: 'int' },
+                    { permissions: 'object' }
+                ],
+                promoteChatMember: [
+                    { chat_id: 'int' },
+                    { user_id: 'int' },
+                    { can_change_info: 'boolean' }
+                ],
+                setChatPermissions: [
+                    { chat_id: 'int' },
+                    { permissions: 'object' }
+                ],
+                getChat: [
+                    { chat_id: 'int' }
+                ],
+                getChatAdministrators: [
+                    { chat_id: 'int' }
+                ],
+                getChatMemberCount: [
+                    { chat_id: 'int' }
+                ],
+                getChatMember: [
+                    { chat_id: 'int' },
+                    { user_id: 'int' }
+                ],
+                answerCallbackQuery: [
+                    { callback_query_id: 'string' },
+                    { text: 'string' },
+                    { show_alert: 'boolean' }
+                ],
+                editMessageText: [
+                    { chat_id: 'int' },
+                    { message_id: 'int' },
+                    { text: 'string' },
+                    { parse_mode: 'string' }
+                ],
+                deleteMessage: [
+                    { chat_id: 'int' },
+                    { message_id: 'int' }
+                ]
+            };
 
             // Populate dropdown initially
             for (const method in apiMethods) {
@@ -347,107 +350,128 @@
                     });
                 }
             });
-        });
-        function submitApiRequest() {
-            const form = document.getElementById('api-method-form');
-            const formData = new FormData(form);
-            const method = formData.get('api-method');
-            const botToken = '{{ $bot->token }}';
-            let url = `https://api.telegram.org/bot${botToken}/${method}?`;
 
-            for (let [key, value] of formData.entries()) {
-                if (key !== 'api-method' && value) {
-                    url += `${key}=${encodeURIComponent(value)}&`;
+            function submitApiRequest() {
+                const form = document.getElementById('api-method-form');
+                const formData = new FormData(form);
+                const method = formData.get('api-method');
+                const botToken = '{{ $bot->token }}';
+                let url = `https://api.telegram.org/bot${botToken}/${method}?`;
+
+                // Convert FormData to URL parameters
+                const params = {};
+                for (let [key, value] of formData.entries()) {
+                    if (key !== 'api-method' && value) {
+                        params[key] = value;
+                    }
                 }
-            }
 
-            url = url.slice(0, -1); // Remove trailing '&'
-
-            fetch(url)
+                // Make the API request
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify(params)
+                })
                 .then(response => response.json())
                 .then(data => {
-                    showResponse(data);
+                    const responseContent = document.getElementById('responseContent');
+                    responseContent.textContent = JSON.stringify(data, null, 2);
+                    hljs.highlightElement(responseContent);
+                    
+                    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+                    responseModal.show();
                 })
                 .catch(error => {
-                    showResponse({ error: error.message });
+                    const responseContent = document.getElementById('responseContent');
+                    responseContent.textContent = JSON.stringify({ error: error.message }, null, 2);
+                    hljs.highlightElement(responseContent);
+                    
+                    const responseModal = new bootstrap.Modal(document.getElementById('responseModal'));
+                    responseModal.show();
                 });
-        }
 
-        let jsonResponse = null;
-
-        function makeCollapsible(json) {
-            if (typeof json !== 'object' || json === null) return json;
-            
-            const collapse = (element) => {
-                const toggleBtn = element.previousElementSibling;
-                if (toggleBtn && toggleBtn.classList.contains('json-toggle')) {
-                    toggleBtn.classList.toggle('collapsed');
-                    element.style.display = element.style.display === 'none' ? 'block' : 'none';
-                }
-            };
-
-            const processElement = (element) => {
-                if (element.nodeType === Node.ELEMENT_NODE) {
-                    if (element.tagName === 'SPAN' && element.classList.contains('hljs-string')) {
-                        try {
-                            const content = element.textContent;
-                            const parsed = JSON.parse(content);
-                            if (typeof parsed === 'object' && parsed !== null) {
-                                const toggle = document.createElement('span');
-                                toggle.className = 'json-toggle';
-                                toggle.addEventListener('click', () => collapse(element));
-                                element.parentNode.insertBefore(toggle, element);
-                            }
-                        } catch (e) {}
-                    }
-                    Array.from(element.children).forEach(processElement);
-                }
-            };
-
-            return processElement;
-        }
-
-        function toggleAllNodes() {
-            const toggles = document.querySelectorAll('.json-toggle');
-            const someCollapsed = Array.from(toggles).some(t => t.classList.contains('collapsed'));
-            
-            toggles.forEach(toggle => {
-                const content = toggle.nextElementSibling;
-                if (someCollapsed) {
-                    toggle.classList.remove('collapsed');
-                    content.style.display = 'block';
-                } else {
-                    toggle.classList.add('collapsed');
-                    content.style.display = 'none';
-                }
-            });
-        }
-
-        function copyResponse() {
-            if (jsonResponse) {
-                navigator.clipboard.writeText(JSON.stringify(jsonResponse, null, 2))
-                    .then(() => {
-                        const copyBtn = document.querySelector('[onclick="copyResponse()"]');
-                        const originalHtml = copyBtn.innerHTML;
-                        copyBtn.innerHTML = '<i class="bi bi-check"></i> Copied!';
-                        setTimeout(() => {
-                            copyBtn.innerHTML = originalHtml;
-                        }, 2000);
-                    });
+                return false; // Prevent form submission
             }
-        }
 
-        function showResponse(response) {
-            jsonResponse = response;
-            const formatted = JSON.stringify(response, null, 2);
-            const responseContent = document.getElementById('responseContent');
-            responseContent.textContent = formatted;
-            hljs.highlightElement(responseContent);
-            makeCollapsible(response)(responseContent);
-            
-            const modal = new bootstrap.Modal(document.getElementById('responseModal'));
-            modal.show();
-        }
+            let jsonResponse = null;
+
+            function makeCollapsible(json) {
+                if (typeof json !== 'object' || json === null) return json;
+                
+                const collapse = (element) => {
+                    const toggleBtn = element.previousElementSibling;
+                    if (toggleBtn && toggleBtn.classList.contains('json-toggle')) {
+                        toggleBtn.classList.toggle('collapsed');
+                        element.style.display = element.style.display === 'none' ? 'block' : 'none';
+                    }
+                };
+
+                const processElement = (element) => {
+                    if (element.nodeType === Node.ELEMENT_NODE) {
+                        if (element.tagName === 'SPAN' && element.classList.contains('hljs-string')) {
+                            try {
+                                const content = element.textContent;
+                                const parsed = JSON.parse(content);
+                                if (typeof parsed === 'object' && parsed !== null) {
+                                    const toggle = document.createElement('span');
+                                    toggle.className = 'json-toggle';
+                                    toggle.addEventListener('click', () => collapse(element));
+                                    element.parentNode.insertBefore(toggle, element);
+                                }
+                            } catch (e) {}
+                        }
+                        Array.from(element.children).forEach(processElement);
+                    }
+                };
+
+                return processElement;
+            }
+
+            function toggleAllNodes() {
+                const toggles = document.querySelectorAll('.json-toggle');
+                const someCollapsed = Array.from(toggles).some(t => t.classList.contains('collapsed'));
+                
+                toggles.forEach(toggle => {
+                    const content = toggle.nextElementSibling;
+                    if (someCollapsed) {
+                        toggle.classList.remove('collapsed');
+                        content.style.display = 'block';
+                    } else {
+                        toggle.classList.add('collapsed');
+                        content.style.display = 'none';
+                    }
+                });
+            }
+
+            function copyResponse() {
+                if (jsonResponse) {
+                    navigator.clipboard.writeText(JSON.stringify(jsonResponse, null, 2))
+                        .then(() => {
+                            const copyBtn = document.querySelector('[onclick="copyResponse()"]');
+                            const originalHtml = copyBtn.innerHTML;
+                            copyBtn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                            setTimeout(() => {
+                                copyBtn.innerHTML = originalHtml;
+                            }, 2000);
+                        });
+                }
+            }
+
+            function showResponse(response) {
+                jsonResponse = response;
+                const formatted = JSON.stringify(response, null, 2);
+                const responseContent = document.getElementById('responseContent');
+                responseContent.textContent = formatted;
+                hljs.highlightElement(responseContent);
+                makeCollapsible(response)(responseContent);
+                
+                const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+                modal.show();
+            }
+        });
     </script>
 
     @push('scripts')

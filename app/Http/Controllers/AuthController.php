@@ -31,7 +31,7 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function showRegister()
+    public function register()
     {
         return view('auth.register');
     }

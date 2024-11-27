@@ -87,18 +87,27 @@
     </div>
 
     <!-- API Response Modal -->
-    <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="apiResponseModalLabel">API Response</h5>
+                    <h5 class="modal-title" id="responseModalLabel">API Response</h5>
+                    <div class="ms-auto me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="toggleAllNodes()">
+                            <i class="bi bi-arrows-expand"></i>
+                            Toggle All
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary ms-2" onclick="copyResponse()">
+                            <i class="bi bi-clipboard"></i>
+                            Copy
+                        </button>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <pre id="apiResponseContent"></pre>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="json-container bg-light p-3 rounded">
+                        <pre><code class="language-json" id="responseContent"></code></pre>
+                    </div>
                 </div>
             </div>
         </div>
@@ -357,13 +366,135 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('apiResponseContent').textContent = JSON.stringify(data, null, 2);
-                    new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
+                    showResponse(data);
                 })
                 .catch(error => {
-                    document.getElementById('apiResponseContent').textContent = 'Error: ' + error;
-                    new bootstrap.Modal(document.getElementById('apiResponseModal')).show();
+                    showResponse({ error: error.message });
                 });
         }
+
+        let jsonResponse = null;
+
+        function makeCollapsible(json) {
+            if (typeof json !== 'object' || json === null) return json;
+            
+            const collapse = (element) => {
+                const toggleBtn = element.previousElementSibling;
+                if (toggleBtn && toggleBtn.classList.contains('json-toggle')) {
+                    toggleBtn.classList.toggle('collapsed');
+                    element.style.display = element.style.display === 'none' ? 'block' : 'none';
+                }
+            };
+
+            const processElement = (element) => {
+                if (element.nodeType === Node.ELEMENT_NODE) {
+                    if (element.tagName === 'SPAN' && element.classList.contains('hljs-string')) {
+                        try {
+                            const content = element.textContent;
+                            const parsed = JSON.parse(content);
+                            if (typeof parsed === 'object' && parsed !== null) {
+                                const toggle = document.createElement('span');
+                                toggle.className = 'json-toggle';
+                                toggle.addEventListener('click', () => collapse(element));
+                                element.parentNode.insertBefore(toggle, element);
+                            }
+                        } catch (e) {}
+                    }
+                    Array.from(element.children).forEach(processElement);
+                }
+            };
+
+            return processElement;
+        }
+
+        function toggleAllNodes() {
+            const toggles = document.querySelectorAll('.json-toggle');
+            const someCollapsed = Array.from(toggles).some(t => t.classList.contains('collapsed'));
+            
+            toggles.forEach(toggle => {
+                const content = toggle.nextElementSibling;
+                if (someCollapsed) {
+                    toggle.classList.remove('collapsed');
+                    content.style.display = 'block';
+                } else {
+                    toggle.classList.add('collapsed');
+                    content.style.display = 'none';
+                }
+            });
+        }
+
+        function copyResponse() {
+            if (jsonResponse) {
+                navigator.clipboard.writeText(JSON.stringify(jsonResponse, null, 2))
+                    .then(() => {
+                        const copyBtn = document.querySelector('[onclick="copyResponse()"]');
+                        const originalHtml = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="bi bi-check"></i> Copied!';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalHtml;
+                        }, 2000);
+                    });
+            }
+        }
+
+        function showResponse(response) {
+            jsonResponse = response;
+            const formatted = JSON.stringify(response, null, 2);
+            const responseContent = document.getElementById('responseContent');
+            responseContent.textContent = formatted;
+            hljs.highlightElement(responseContent);
+            makeCollapsible(response)(responseContent);
+            
+            const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+            modal.show();
+        }
     </script>
+
+    @push('scripts')
+    <!-- Highlight.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <!-- Highlight.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/json.min.js"></script>
+
+    <style>
+        .json-container {
+            position: relative;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .json-container pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        .collapsible:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .collapsed::after {
+            content: '...';
+            color: #999;
+        }
+
+        .json-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .json-toggle::before {
+            content: '▼';
+            display: inline-block;
+            margin-right: 5px;
+            transition: transform 0.1s;
+        }
+
+        .json-toggle.collapsed::before {
+            transform: rotate(-90deg);
+        }
+    </style>
+    @endpush
 @endsection

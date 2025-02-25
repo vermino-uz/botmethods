@@ -120,6 +120,8 @@ class BotController extends Controller
         $validated = $request->validate([
             'url' => 'required|url',
         ]);
+        
+        Http::get("https://api.telegram.org/bot{$bot->token}/deleteWebhook?drop_pending_updates=true");
 
         $response = Http::post("https://api.telegram.org/bot{$bot->token}/setWebhook", [
             'url' => $validated['url'],
